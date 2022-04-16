@@ -26,7 +26,6 @@ def change_item():
         amit.pre_legs()
 
 
-
 def first_screen():
     exit_button = Button(EXIT_BUTTON_FIRST_SCREEN_X, EXIT_BUTTON_FIRST_SCREEN_Y, EXIT_BUTTON_WIDTH, EXIT_BUTTON_HEIGHT,
                          EXIT_BUTTON_PIC, EXIT_BUTTON_HOVER, screen)

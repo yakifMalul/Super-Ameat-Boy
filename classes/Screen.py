@@ -15,5 +15,7 @@ class Screen:
         self.screen.blit(self.background_image, (0, 0))
         for character in self.characters:
             character.display_on_first_screen()
-        for button in buttons:
+        for button in self.buttons:
             button.display(False)
+        # for item in self.items:
+        #     item.
