@@ -11,41 +11,19 @@ pygame.display.set_caption("Super Ameat Boy")
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
 
-def change_item():
-    if next_face.in_button(event.pos[0], event.pos[1]):
+def change_item(buttons):
+    if buttons["next_face"].in_button(event.pos[0], event.pos[1]):
         amit.next_face()
-    if pre_face.in_button(event.pos[0], event.pos[1]):
+    if buttons["pre_face"].in_button(event.pos[0], event.pos[1]):
         amit.pre_face()
-    if next_body.in_button(event.pos[0], event.pos[1]):
+    if buttons["next_body"].in_button(event.pos[0], event.pos[1]):
         amit.next_body()
-    if pre_body.in_button(event.pos[0], event.pos[1]):
+    if buttons["pre_body"].in_button(event.pos[0], event.pos[1]):
         amit.pre_body()
-    if next_legs.in_button(event.pos[0], event.pos[1]):
+    if buttons["next_legs"].in_button(event.pos[0], event.pos[1]):
         amit.next_legs()
-    if pre_legs.in_button(event.pos[0], event.pos[1]):
+    if buttons["pre_legs"].in_button(event.pos[0], event.pos[1]):
         amit.pre_legs()
-
-
-def first_screen():
-    exit_button = Button(EXIT_BUTTON_FIRST_SCREEN_X, EXIT_BUTTON_FIRST_SCREEN_Y, EXIT_BUTTON_WIDTH, EXIT_BUTTON_HEIGHT,
-                         EXIT_BUTTON_PIC, EXIT_BUTTON_HOVER, screen)
-    start_button = Button(START_BUTTON_X, START_BUTTON_Y, START_BUTTON_WIDTH, START_BUTTON_HEIGHT,
-                          START_BUTTON_PIC, START_BUTTON_HOVER, screen)
-    next_face = Button(NEXT_BUTTON_X, FACE_BUTTON_Y, NEXT_BUTTON_WIDTH, NEXT_BUTTON_HEIGHT,
-                       NEXT_ITEM_PIC, NEXT_ITEM_HOVER, screen)
-    pre_face = Button(PRE_BUTTON_X, FACE_BUTTON_Y, PRE_BUTTON_WIDTH, PRE_BUTTON_HEIGHT,
-                      PRE_ITEM_PIC, PRE_ITEM_HOVER, screen)
-
-    next_body = Button(NEXT_BUTTON_X, BODY_BUTTON_Y, NEXT_BUTTON_WIDTH, NEXT_BUTTON_HEIGHT,
-                       NEXT_ITEM_PIC, NEXT_ITEM_HOVER, screen)
-    pre_body = Button(PRE_BUTTON_X, BODY_BUTTON_Y, PRE_BUTTON_WIDTH, PRE_BUTTON_HEIGHT,
-                      PRE_ITEM_PIC, PRE_ITEM_HOVER, screen)
-
-    next_legs = Button(NEXT_BUTTON_X, LEGS_BUTTON_Y, NEXT_BUTTON_WIDTH, NEXT_BUTTON_HEIGHT,
-                       NEXT_ITEM_PIC, NEXT_ITEM_HOVER, screen)
-    pre_legs = Button(PRE_BUTTON_X, LEGS_BUTTON_Y, PRE_BUTTON_WIDTH, PRE_BUTTON_HEIGHT,
-                      PRE_ITEM_PIC, PRE_ITEM_HOVER, screen)
-    button_list = [exit_button, start_button, next_face, pre_face, next_body, pre_body, next_legs, pre_legs]
 
 
 def move(character):
@@ -71,47 +49,86 @@ def move(character):
     pygame.display.flip()
 
 
+def hover(some_screen):
+    global screen_num
+    if event.type == pygame.MOUSEMOTION:
+        # For hover
+        flag = False
+        for button in some_screen.buttons:
+            btn = some_screen.buttons[button]
+            if btn.in_button(event.pos[0], event.pos[1]):
+                flag = True
+            btn.display(btn.in_button(event.pos[0], event.pos[1]))
+        if not flag and screen_num == 1:
+            f = open("info.txt")
+            levels = f.readlines(0)
+            f.close()
+            levels = str(levels).replace("[", "").replace("]", "").replace("'", "").split(" ")
+            bigest = 0
+            for num in levels:
+                num = int(num)
+                if num > bigest:
+                    bigest = num
+            some_screen.characters[0].display_on_button(bigest)
+
+
 amit = Character(185, 150, [], screen)
 yakir = Princess(185, 150, [], screen)
-first = first_level(amit, yakir, screen)
+first_screen = first_screen(yakir, screen)
+choose_level_screen = second_screen_setup(amit, screen)
+first_level = first_level(amit, yakir, screen)
 
 
-screen_num = 2
+screen_num = 0
 running = True
 while running:
     if screen_num == 0:  # first screen
         # Arrange the items on the screen
-        arrange1(FIRST_BACKGROUND, [amit], button_list, [])
+        first_screen.display(screen_num)
         for event in pygame.event.get():
-            if event.type == pygame.QUIT: # or event.type == pygame.MOUSEBUTTONUP and \
-                #        exit_button.in_button(event.pos[0], event.pos[1]):
+            if event.type == pygame.QUIT or event.type == pygame.MOUSEBUTTONUP and \
+                    first_screen.buttons["exit_button"].in_button(event.pos[0], event.pos[1]):
                 running = False
             # Real game loop
-            if event.type == pygame.MOUSEMOTION:
-                # For hover
-                for button in button_list:
-                    button.display(button.in_button(event.pos[0], event.pos[1]))
+            hover(first_screen)
             if event.type == pygame.MOUSEBUTTONUP:
-                if start_button.in_button(event.pos[0], event.pos[1]):
+                if first_screen.buttons["start_button"].in_button(event.pos[0], event.pos[1]):
                     screen_num = 1
-                change_item()
-    if screen_num == 1:
-        arrange1(CHOOSE_LEVELS_BACKGROUND, [], [], [])
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT: # or event.type == pygame.MOUSEBUTTONUP and \
-                #        exit_button.in_button(event.pos[0], event.pos[1]):
-                running = False
-    if screen_num == 2:
-        first.display()
+                change_item(first_screen.buttons)
+
+            pygame.display.flip()
+    if screen_num == 1:  # choose level screen
+        choose_level_screen.display(screen_num)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:  # or event.type == pygame.MOUSEBUTTONUP and \
                 #        exit_button.in_button(event.pos[0], event.pos[1]):
                 running = False
-
-        move(first.characters[0])
-        first.characters[1].gravity()
-        if first.characters[1].collide_with_character(first.characters[0]):
-            screen_num = 0
+            hover(choose_level_screen)
+            if event.type == pygame.MOUSEBUTTONUP:
+                if choose_level_screen.buttons["exit_button"].in_button(event.pos[0], event.pos[1]):
+                    screen_num = 0
+                if choose_level_screen.buttons["first_level"].in_button(event.pos[0], event.pos[1]):
+                    screen_num = 2
+                    amit.x, amit.y = CHARACTER_FIRST_LEVEL_X, CHARACTER_FIRST_LEVEL_Y
+                    yakir.x, yakir.y = PRINCESS_FIRST_LEVEL_X, PRINCESS_FIRST_LEVEL_Y
+            pygame.display.flip()
+    if screen_num == 2:
+        first_level.display()
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+            hover(first_level)
+            if event.type == pygame.MOUSEBUTTONUP:
+                if first_level.buttons["exit_button"].in_button(event.pos[0], event.pos[1]):
+                    screen_num = 1
+        move(first_level.characters[0])
+        first_level.characters[1].gravity()
+        if first_level.characters[1].collide_with_character(first_level.characters[0]):
+            f = open("info.txt", "a")
+            f.write(" 2")
+            f.close()
+            choose_level_screen.buttons["second_level"].mood = True
+            screen_num = 1
         pygame.display.flip()
 
 

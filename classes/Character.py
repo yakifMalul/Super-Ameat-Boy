@@ -76,20 +76,46 @@ class Character:
         self.screen.blit(img3, (self.x, self.y + 2 * ITEM_HEIGHT))
         # pygame.display.flip()
 
-    def display_on_first_screen(self):
-        folder = "ameat boy"
-        # display face
-        img = pygame.image.load(CHARACTER_FACES[AMIT_FACE_INDEX].replace("folder", folder))
-        img1 = pygame.transform.scale(img, (FIRST_SCREEN_ITEM_WIDTH, FIRST_SCREEN_ITEM_HEIGHT))
-        self.screen.blit(img1, (self.x, self.y))
-        # display body
-        img = pygame.image.load(CHARACTER_BODIES[AMIT_BODY_INDEX].replace("folder", folder))
-        img2 = pygame.transform.scale(img, (FIRST_SCREEN_ITEM_WIDTH, FIRST_SCREEN_ITEM_HEIGHT))
-        self.screen.blit(img2, (self.x, self.y + FIRST_SCREEN_ITEM_HEIGHT))
-        # display face
-        img = pygame.image.load(CHARACTER_LEGS[AMIT_LEGS_INDEX].replace("folder", folder))
-        img3 = pygame.transform.scale(img, (FIRST_SCREEN_ITEM_WIDTH, FIRST_SCREEN_ITEM_HEIGHT))
-        self.screen.blit(img3, (self.x, self.y + 2 * FIRST_SCREEN_ITEM_HEIGHT))
+    def display_on_screen(self, screen_num):
+        if screen_num == 0:
+            folder = "ameat boy"
+            # display face
+            img = pygame.image.load(CHARACTER_FACES[AMIT_FACE_INDEX].replace("folder", folder))
+            img1 = pygame.transform.scale(img, (FIRST_SCREEN_ITEM_WIDTH, FIRST_SCREEN_ITEM_HEIGHT))
+            self.screen.blit(img1, (185, 150))
+            # display body
+            img = pygame.image.load(CHARACTER_BODIES[AMIT_BODY_INDEX].replace("folder", folder))
+            img2 = pygame.transform.scale(img, (FIRST_SCREEN_ITEM_WIDTH, FIRST_SCREEN_ITEM_HEIGHT))
+            self.screen.blit(img2, (185, 150 + FIRST_SCREEN_ITEM_HEIGHT))
+            # display face
+            img = pygame.image.load(CHARACTER_LEGS[AMIT_LEGS_INDEX].replace("folder", folder))
+            img3 = pygame.transform.scale(img, (FIRST_SCREEN_ITEM_WIDTH, FIRST_SCREEN_ITEM_HEIGHT))
+            self.screen.blit(img3, (185, 150 + 2 * FIRST_SCREEN_ITEM_HEIGHT))
+        elif screen_num == 1:
+            pass
+        else:
+            self.display()
+
+    def display_on_button(self, button_num):
+        if button_num == 1:
+            self.x = FIRST_COL
+            self.y = FIRST_ROW
+        elif button_num == 2:
+            self.x = FIRST_COL
+            self.y = SECOND_ROW
+        elif button_num == 3:
+            self.x = SECOND_COL
+            self.y = SECOND_ROW
+        elif button_num == 4:
+            self.x = THIRD_COL
+            self.y = SECOND_ROW
+        elif button_num == 5:
+            self.x = THIRD_COL
+            self.y = FIRST_ROW
+        self.x = self.x + (LEVEL_BUTTON_WIDTH - CHARACTER_WIDTH) / 2
+        self.y = self.y + (LEVEL_BUTTON_HEIGHT - CHARACTER_HEIGHT) / 2
+        self.mood = "ameat boy"
+        self.display()
 
     def right(self, sprint):
         for i in range(STEP):

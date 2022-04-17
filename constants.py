@@ -35,6 +35,12 @@ CHARACTER_HEIGHT = 3 * ITEM_HEIGHT
 
 PRINCESS_PIC = "images/princess.png"
 
+# Levels
+CHARACTER_FIRST_LEVEL_X = 100
+CHARACTER_FIRST_LEVEL_Y = SCREEN_HEIGHT - CHARACTER_HEIGHT - 350
+PRINCESS_FIRST_LEVEL_X = SCREEN_WIDTH - 100
+PRINCESS_FIRST_LEVEL_Y = 100
+
 # Movments
 STEP = 10
 JUMP = 20
@@ -78,3 +84,14 @@ PRE_ITEM_PIC = "images/buttons/pre item.png"
 PRE_ITEM_HOVER = "images/buttons/pre item hover.png"
 
 GUIDE_PIC = "images/guide.png"
+
+LEVEL_BUTTON_PIC = "images/buttons/choose level.png"
+LEVEL_BUTTON_HOVER_PIC = "images/buttons/choose level hover.png"
+LEVEL_BUTTON_OFF_PIC = "images/buttons/choose level blocked.png"
+LEVEL_BUTTON_WIDTH = 200
+LEVEL_BUTTON_HEIGHT = 200
+FIRST_ROW = 250
+SECOND_ROW = 600
+FIRST_COL = 200
+SECOND_COL = 600
+THIRD_COL = 1000

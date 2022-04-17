@@ -11,11 +11,11 @@ class Screen:
         self.items = items
         self.screen = screen
 
-    def display(self):
+    def display(self, screen_num):
         self.screen.blit(self.background_image, (0, 0))
-        for character in self.characters:
-            character.display_on_first_screen()
         for button in self.buttons:
-            button.display(False)
+            self.buttons[button].display(False)
+        for character in self.characters:
+            character.display_on_screen(screen_num)
         # for item in self.items:
         #     item.
